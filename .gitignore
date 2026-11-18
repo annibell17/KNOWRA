@@ -1,0 +1,8 @@
+node_modules/
+frontend/dist/
+frontend/.vite/
+backend/venv/
+.env
+.DS_Store
+__pycache__/
+*.pyc
