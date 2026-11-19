@@ -23,9 +23,10 @@ app.add_middleware(
 )
 
 # Include routers
-from .api import health
+from .api import health, cognitive
 
 app.include_router(health.router)
+app.include_router(cognitive.router)
 
 # Placeholder for future Cognition Engine import
 # from .cognitive_engine import engine
