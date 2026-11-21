@@ -1,6 +1,9 @@
 
+import logging
+
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
+
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from ..cognitive_engine.bkt import BayesianKnowledgeTracer
@@ -20,24 +23,15 @@ from ..cognitive_engine.learning_pipeline import (
 )
 
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(
     prefix="/cognitive",
     tags=["Cognitive Engine"],
 )
 
 
-# --------------------------------
-# Shared cognitive pipeline
-# --------------------------------
-
 def create_demo_pipeline():
-    """
-    Build a clearly labelled demo learning environment.
-
-    These concepts and questions are test fixtures,
-    not a production question bank.
-    """
-
     graph = ConceptGraph()
 
     graph.register_concept(
@@ -96,13 +90,8 @@ def create_demo_pipeline():
     )
 
 
-# One shared instance for the running application.
 cognitive_pipeline = create_demo_pipeline()
 
-
-# --------------------------------
-# Bayesian Knowledge Tracing
-# --------------------------------
 
 class BKTUpdateRequest(BaseModel):
     prior_knowledge: float = Field(ge=0, le=1)
@@ -119,10 +108,6 @@ async def update_knowledge(request: BKTUpdateRequest):
     )
 
 
-# --------------------------------
-# Memory Retention
-# --------------------------------
-
 class RetentionEstimateRequest(BaseModel):
     initial_retention: float = Field(ge=0, le=1)
     elapsed_days: float = Field(ge=0)
@@ -138,10 +123,6 @@ async def estimate_retention(request: RetentionEstimateRequest):
     )
 
 
-# --------------------------------
-# Complete cognitive pipeline
-# --------------------------------
-
 class AnswerSubmissionRequest(BaseModel):
     learner_id: str = Field(min_length=1, max_length=128)
     question_id: str = Field(min_length=1, max_length=128)
@@ -150,13 +131,41 @@ class AnswerSubmissionRequest(BaseModel):
 
 
 @router.post("/answer/submit")
-async def submit_answer(request: AnswerSubmissionRequest):
+async def submit_answer(
+    request: AnswerSubmissionRequest,
+    http_request: Request,
+):
     try:
+        # Process the answer through KNOWRA's cognitive engine.
         result = cognitive_pipeline.process_answer(
             learner_id=request.learner_id,
             question_id=request.question_id,
             selected_option_id=request.selected_option_id,
             timestamp=request.timestamp,
+        )
+
+        # Retrieve the updated learner state.
+        learner_state = cognitive_pipeline.learner_manager.get_state(
+            result["learner_id"],
+            result["concept_id"],
+        )
+
+        # Retrieve the repository initialised during application startup.
+        repository = http_request.app.state.learner_repository
+
+        # Extract the diagnosis details.
+        diagnosis = result["diagnosis"]
+
+        # Persist the learner state and answer event atomically.
+        await repository.save_submission(
+            state=learner_state,
+            question_id=result["question_id"],
+            selected_option_id=request.selected_option_id,
+            is_correct=diagnosis["is_correct"],
+            misconception_id=diagnosis["diagnosis"],
+            submitted_at=datetime.fromisoformat(
+                result["processed_at"]
+            ),
         )
 
         return result
@@ -173,4 +182,14 @@ async def submit_answer(request: AnswerSubmissionRequest):
         raise HTTPException(
             status_code=400,
             detail=message,
+        )
+
+    except Exception:
+        logger.exception(
+            "Failed to process or persist an answer submission."
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to persist answer submission.",
         )
