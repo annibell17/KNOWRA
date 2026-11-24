@@ -44,7 +44,7 @@ function LearnerProgress() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4 text-center text-indigo-800">Learner Progress</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center text-primary">Learner Progress</h1>
       <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
         <input
           type="text"
@@ -59,17 +59,17 @@ function LearnerProgress() {
         </button>
       </form>
 
-      {status === "loading" && <p className="text-gray-600">Loading...</p>}
-      {status === "error" && <p className="text-red-600">Error: {errorMsg}</p>}
+      {status === "loading" && <p className="text-secondary">Loading...</p>}
+      {status === "error" && <p className="text-error">Error: {errorMsg}</p>}
       {status === "notfound" && <p className="text-yellow-600">Learner progress not found.</p>}
-      {status === "empty" && <p className="text-gray-600">No progress data available.</p>}
+      {status === "empty" && <p className="text-secondary">No progress data available.</p>}
 
       {status === "success" && data && (
         <div className="space-y-4">
           <p><strong>Learner ID:</strong> {data.learner_id}</p>
           <p><strong>Total Concepts Attempted:</strong> {data.total_concepts_attempted}</p>
-          <table className="w-full table-auto border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
+          <table className="w-full table-auto border-collapse border border-semantic">
+            <thead className="bg-card">
               <tr>
                 <th className="border p-2">Concept</th>
                 <th className="border p-2">Knowledge %</th>

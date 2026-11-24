@@ -1,49 +1,31 @@
 /* Theme definitions with semantic CSS variables */
 
-/* Autumn – default theme */
-:root[data-theme='autumn'] {
+/* Autumn – light theme */
+:root[data-theme='autumn-light'] {
   /* Primary palette */
-  --color-space-cadet: #24334F;
+  --color-space-cadet: #24334F;      /* navy */
   --color-slate-gray: #61758A;
-  --color-tan: #D7B99A;
-  --color-coffee: #6B4938;
-  --color-caput-mortuum: #632A2E;
+  --color-tan: #D7B99A;            /* warm tan */
+  --color-coffee: #6B4938;         /* coffee */
+  --color-caput-mortuum: #632A2E;   /* burgundy */
 
   /* Semantic tokens */
-  --color-primary-text: var(--color-space-cadet);
+  --color-primary-text: var(--color-tan);               /* ivory/cream for readability */
   --color-secondary-text: var(--color-slate-gray);
-  --color-page-bg: var(--color-tan);
-  --color-card-bg: #ffffff; /* keep cards white for readability */
-  --color-primary-action: var(--color-caput-mortuum);
+  --color-page-bg: #FAF8F2; /* warm ivory / paper */
+  --color-card-bg: #ffffff; /* default for generic cards if used */
+  --color-primary-action: var(--color-caput-mortuum);   /* burgundy accent */
   --color-secondary-action: var(--color-coffee);
   --color-border: var(--color-slate-gray);
   --color-accent: var(--color-caput-mortuum);
-  --color-success: #2E7D32; /* green */
-  --color-error: #C62828;   /* red */
-  --color-warning: #ED6C02; /* orange */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
-}
 
-/* Spring – alternative theme */
-:root[data-theme='spring'] {
-  /* Primary palette */
-  --color-sage: #C3C895;
-  --color-dark-purple: #30253E;
-  --color-russian-green: #638B72;
-  --color-pewter-blue: #83B8B2;
-  --color-cambridge-blue: #A6D5C7;
+  /* Custom surface roles */
+  --color-hero-bg: var(--color-space-cadet);
+  --color-hero-text: var(--color-tan);
+  --color-secondary-surface: var(--color-tan);
+  --color-philosophy-bg: var(--color-slate-gray);
+  --color-progress-bg: var(--color-caput-mortuum);
 
-  /* Semantic tokens */
-  --color-primary-text: var(--color-dark-purple);
-  --color-secondary-text: var(--color-pewter-blue);
-  --color-page-bg: var(--color-cambridge-blue);
-  --color-card-bg: #ffffff;
-  --color-primary-action: var(--color-russian-green);
-  --color-secondary-action: var(--color-sage);
-  --color-border: var(--color-pewter-blue);
-  --color-accent: var(--color-russian-green);
   --color-success: #2E7D32;
   --color-error: #C62828;
   --color-warning: #ED6C02;
@@ -52,17 +34,130 @@
   --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
 }
 
-/* Apply defaults */
+/* Autumn – dark theme */
+:root[data-theme='autumn-dark'] {
+  /* Primary palette (inverted) */
+  --color-space-cadet: #D7B99A; /* light */
+  --color-slate-gray: #A3B2C2;
+  --color-tan: #24334F;      /* dark background */
+  --color-coffee: #C5AFA0;
+  --color-caput-mortuum: #F3D5C0;
+
+  /* Semantic tokens */
+  --color-primary-text: var(--color-tan);
+  --color-secondary-text: var(--color-slate-gray);
+  --color-page-bg: var(--color-tan);
+  --color-card-bg: #2a2a2a;
+  --color-primary-action: var(--color-caput-mortuum);
+  --color-secondary-action: var(--color-coffee);
+  --color-border: var(--color-slate-gray);
+  --color-accent: var(--color-caput-mortuum);
+
+  /* Custom surface roles */
+  --color-hero-bg: var(--color-coffee);
+  --color-hero-text: var(--color-tan);
+  --color-secondary-surface: var(--color-space-cadet);
+  --color-philosophy-bg: var(--color-slate-gray);
+  --color-progress-bg: var(--color-caput-mortuum);
+
+  --color-success: #81C784;
+  --color-error: #E57373;
+  --color-warning: #FFB74D;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+}
+
+/* Spring – light theme */
+:root[data-theme='spring-light'] {
+  /* Primary palette */
+  --color-sage: #C3C895;
+  --color-dark-purple: #30253E;
+  --color-russian-green: #638B72;
+  --color-pewter-blue: #83B8B2;
+  --color-cambridge-blue: #A6D5C7;
+
+  /* Semantic tokens */
+  --color-primary-text: var(--color-cambridge-blue);
+  --color-secondary-text: var(--color-pewter-blue);
+  --color-page-bg: #F0F9F5; /* pale Cambridge Blue / soft neutral */
+  --color-card-bg: #ffffff;
+  --color-primary-action: var(--color-russian-green);
+  --color-secondary-action: var(--color-sage);
+  --color-border: var(--color-pewter-blue);
+  --color-accent: var(--color-russian-green);
+
+  /* Custom surface roles */
+  --color-hero-bg: var(--color-dark-purple);
+  --color-hero-text: var(--color-cambridge-blue);
+  --color-secondary-surface: var(--color-sage);
+  --color-philosophy-bg: var(--color-pewter-blue);
+  --color-progress-bg: var(--color-russian-green);
+
+  --color-success: #2E7D32;
+  --color-error: #C62828;
+  --color-warning: #ED6C02;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+}
+
+/* Spring – dark theme */
+:root[data-theme='spring-dark'] {
+  /* Primary palette (inverted) */
+  --color-sage: #6A7A5B;
+  --color-dark-purple: #AFA5B0;
+  --color-russian-green: #B0C5A2;
+  --color-pewter-blue: #C3E0D8;
+  --color-cambridge-blue: #DCE9E5;
+
+  /* Semantic tokens */
+  --color-primary-text: var(--color-cambridge-blue);
+  --color-secondary-text: var(--color-pewter-blue);
+  --color-page-bg: var(--color-cambridge-blue);
+  --color-card-bg: #2a2a2a;
+  --color-primary-action: var(--color-russian-green);
+  --color-secondary-action: var(--color-sage);
+  --color-border: var(--color-pewter-blue);
+  --color-accent: var(--color-russian-green);
+
+  /* Custom surface roles */
+  --color-hero-bg: #8B6C70; /* darkened Russian Green */
+  --color-hero-text: var(--color-cambridge-blue);
+  --color-secondary-surface: #A58F9A; /* dark purple variation */
+  --color-philosophy-bg: var(--color-dark-purple);
+  --color-progress-bg: var(--color-pewter-blue);
+
+  --color-success: #81C784;
+  --color-error: #E57373;
+  --color-warning: #FFB74D;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+}
+
+/* Apply defaults – fallback if no theme */
 html {
   color: var(--color-primary-text);
   background-color: var(--color-page-bg);
 }
 
-/* Utility classes using semantic vars (Tailwind can still be used for layout) */
+/* Utility classes using semantic vars */
 .bg-page { background-color: var(--color-page-bg); }
+.bg-card { background-color: var(--color-card-bg); }
+.bg-hero { background-color: var(--color-hero-bg); }
+.bg-secondary-surface { background-color: var(--color-secondary-surface); }
+.bg-philosophy { background-color: var(--color-philosophy-bg); }
+.bg-progress { background-color: var(--color-progress-bg); }
 .text-primary { color: var(--color-primary-text); }
 .text-secondary { color: var(--color-secondary-text); }
+.text-hero { color: var(--color-hero-text); }
+.text-primary-action { color: var(--color-primary-action); }
+.text-secondary-action { color: var(--color-secondary-action); }
+.bg-primary-action { background-color: var(--color-primary-action); }
+.bg-secondary-action { background-color: var(--color-secondary-action); }
 .border-semantic { border-color: var(--color-border); }
+.accent { color: var(--color-accent); }
 .shadow-sm { box-shadow: var(--shadow-sm); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }

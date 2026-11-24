@@ -86,11 +86,11 @@ function LearningWorkspace() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Learning Workspace</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-primary">Learning Workspace</h2>
 
       {/* Learner ID entry */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Learner ID</label>
+        <label className="block text-sm font-medium text-primary">Learner ID</label>
         <input
           type="text"
           className="mt-1 block w-full border rounded px-3 py-2"
@@ -101,8 +101,8 @@ function LearningWorkspace() {
       </div>
 
       <form onSubmit={submitAnswer} className="space-y-6">
-        <fieldset className="border border-gray-200 p-4 rounded bg-white">
-          <legend className="text-lg font-medium text-gray-900">{q.prompt}</legend>
+        <fieldset className="border border-semantic p-4 rounded bg-card">
+          <legend className="text-lg font-medium text-primary">{q.prompt}</legend>
           <div className="mt-2 space-y-2">
             {q.options.map((opt) => (
               <label key={opt.option_id} className="flex items-center space-x-2">
@@ -121,7 +121,7 @@ function LearningWorkspace() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="bg-indigo-600 text-white rounded px-4 py-2 hover:bg-indigo-700"
+          className="bg-primary-action text-white rounded px-4 py-2 hover:bg-primary-action/90"
         >
           {status === "submitting" ? "Submitting…" : "Submit Answer"}
         </button>
@@ -131,8 +131,8 @@ function LearningWorkspace() {
       {error && status !== "error" && <ErrorMessage msg={error} />}
 
       {feedback && (
-        <section className="mt-6 p-4 border border-gray-200 rounded bg-gray-50">
-          <h3 className="font-medium text-gray-800 mb-2">Feedback</h3>
+        <section className="mt-6 p-4 border border-semantic rounded bg-card">
+          <h3 className="font-medium text-primary mb-2">Feedback</h3>
           <p><strong>Correct?</strong> {feedback.isCorrect ? "Yes" : "No"}</p>
           {feedback.message && (
             <p><strong>Message:</strong> {feedback.message}</p>
@@ -149,7 +149,7 @@ function LearningWorkspace() {
           {feedback.recommendation && (
             <p><strong>Recommended next concept:</strong> {feedback.recommendation}</p>
           )}
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="text-sm text-primary mt-2">
             Processed at: {new Date(feedback.processedAt).toLocaleString()}
           </p>
         </section>
