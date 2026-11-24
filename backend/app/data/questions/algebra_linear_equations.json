@@ -1,0 +1,228 @@
+﻿{
+  "module_id": "algebra_linear_equations",
+  "version": "1.0.0",
+  "questions": [
+    {
+      "question_id": "arith_001",
+      "concept_id": "arithmetic",
+      "difficulty": "easy",
+      "type": "multiple_choice",
+      "prompt": "What is the value of 8 - 3 × 2?",
+      "options": [
+        {"option_id": "a", "text": "10"},
+        {"option_id": "b", "text": "2"},
+        {"option_id": "c", "text": "16"},
+        {"option_id": "d", "text": "5"}
+      ],
+      "correct_option_id": "b",
+      "explanation": "Multiplication is performed before subtraction. First calculate 3 × 2 = 6, then 8 - 6 = 2.",
+      "misconception_rules": [
+        {
+          "option_id": "a",
+          "misconception_id": "operation_order_error",
+          "description": "The learner may be performing subtraction before multiplication.",
+          "confidence": 0.9
+        }
+      ],
+      "tags": ["order_of_operations", "multiplication", "subtraction"]
+    },
+    {
+      "question_id": "arith_002",
+      "concept_id": "arithmetic",
+      "difficulty": "easy",
+      "type": "multiple_choice",
+      "prompt": "What is -7 + 12?",
+      "options": [
+        {"option_id": "a", "text": "-19"},
+        {"option_id": "b", "text": "-5"},
+        {"option_id": "c", "text": "5"},
+        {"option_id": "d", "text": "19"}
+      ],
+      "correct_option_id": "c",
+      "explanation": "Adding 12 to -7 is equivalent to moving 12 units to the right on the number line. The result is 5.",
+      "misconception_rules": [
+        {
+          "option_id": "a",
+          "misconception_id": "signed_number_addition_error",
+          "description": "The learner may be adding the magnitudes while incorrectly retaining a negative sign.",
+          "confidence": 0.85
+        }
+      ],
+      "tags": ["integers", "negative_numbers", "addition"]
+    },
+    {
+      "question_id": "arith_003",
+      "concept_id": "arithmetic",
+      "difficulty": "medium",
+      "type": "multiple_choice",
+      "prompt": "Evaluate: 18 ÷ 3 + 4 × 2.",
+      "options": [
+        {"option_id": "a", "text": "14"},
+        {"option_id": "b", "text": "20"},
+        {"option_id": "c", "text": "10"},
+        {"option_id": "d", "text": "16"}
+      ],
+      "correct_option_id": "a",
+      "explanation": "Division and multiplication are performed before addition. Calculate 18 ÷ 3 = 6 and 4 × 2 = 8. Then 6 + 8 = 14.",
+      "misconception_rules": [
+        {
+          "option_id": "b",
+          "misconception_id": "left_to_right_operation_error",
+          "description": "The learner may be evaluating the expression strictly from left to right instead of respecting operator precedence.",
+          "confidence": 0.9
+        }
+      ],
+      "tags": ["order_of_operations", "division", "multiplication"]
+    },
+    {
+      "question_id": "var_001",
+      "concept_id": "variables",
+      "difficulty": "easy",
+      "type": "multiple_choice",
+      "prompt": "In the expression 3x + 5, what does x represent?",
+      "options": [
+        {"option_id": "a", "text": "A fixed value that must always be 3"},
+        {"option_id": "b", "text": "An unknown or variable quantity"},
+        {"option_id": "c", "text": "The multiplication operation"},
+        {"option_id": "d", "text": "The number 5"}
+      ],
+      "correct_option_id": "b",
+      "explanation": "A variable is a symbol that represents a value. Its value may be unknown or may change depending on the situation.",
+      "misconception_rules": [
+        {
+          "option_id": "a",
+          "misconception_id": "coefficient_variable_confusion",
+          "description": "The learner may be confusing the coefficient 3 with the variable x.",
+          "confidence": 0.9
+        }
+      ],
+      "tags": ["variables", "algebraic_expressions", "coefficients"]
+    },
+    {
+      "question_id": "var_002",
+      "concept_id": "variables",
+      "difficulty": "easy",
+      "type": "multiple_choice",
+      "prompt": "If x = 4, what is the value of 2x + 3?",
+      "options": [
+        {"option_id": "a", "text": "11"},
+        {"option_id": "b", "text": "14"},
+        {"option_id": "c", "text": "9"},
+        {"option_id": "d", "text": "23"}
+      ],
+      "correct_option_id": "a",
+      "explanation": "Substitute x = 4. Then 2 × 4 + 3 = 8 + 3 = 11.",
+      "misconception_rules": [
+        {
+          "option_id": "d",
+          "misconception_id": "substitution_as_concatenation",
+          "description": "The learner may be treating the coefficient and substituted value as adjacent digits rather than multiplying them.",
+          "confidence": 0.9
+        }
+      ],
+      "tags": ["substitution", "evaluation", "coefficients"]
+    },
+    {
+      "question_id": "var_003",
+      "concept_id": "variables",
+      "difficulty": "medium",
+      "type": "multiple_choice",
+      "prompt": "Which expression represents five less than twice a number x?",
+      "options": [
+        {"option_id": "a", "text": "2(x - 5)"},
+        {"option_id": "b", "text": "5 - 2x"},
+        {"option_id": "c", "text": "2x - 5"},
+        {"option_id": "d", "text": "5x - 2"}
+      ],
+      "correct_option_id": "c",
+      "explanation": "Twice a number is 2x. Five less than that quantity means subtracting 5, giving 2x - 5.",
+      "misconception_rules": [
+        {
+          "option_id": "b",
+          "misconception_id": "subtraction_order_error",
+          "description": "The learner may be reversing the order of the quantities in a subtraction expression.",
+          "confidence": 0.95
+        }
+      ],
+      "tags": ["word_problems", "expression_translation", "subtraction"]
+    },
+    {
+      "question_id": "eq_001",
+      "concept_id": "equations",
+      "difficulty": "easy",
+      "type": "multiple_choice",
+      "prompt": "Solve: x + 7 = 12.",
+      "options": [
+        {"option_id": "a", "text": "19"},
+        {"option_id": "b", "text": "5"},
+        {"option_id": "c", "text": "7"},
+        {"option_id": "d", "text": "-5"}
+      ],
+      "correct_option_id": "b",
+      "explanation": "Subtract 7 from both sides: x = 12 - 7 = 5.",
+      "misconception_rules": [
+        {
+          "option_id": "a",
+          "misconception_id": "inverse_operation_error",
+          "description": "The learner may be adding 7 instead of subtracting it to isolate x.",
+          "confidence": 0.95
+        }
+      ],
+      "tags": ["linear_equations", "inverse_operations", "addition"]
+    },
+    {
+      "question_id": "eq_002",
+      "concept_id": "equations",
+      "difficulty": "medium",
+      "type": "multiple_choice",
+      "prompt": "Solve: 3x = 21.",
+      "options": [
+        {"option_id": "a", "text": "24"},
+        {"option_id": "b", "text": "18"},
+        {"option_id": "c", "text": "7"},
+        {"option_id": "d", "text": "63"}
+      ],
+      "correct_option_id": "c",
+      "explanation": "Divide both sides by 3: x = 21 ÷ 3 = 7.",
+      "misconception_rules": [
+        {
+          "option_id": "d",
+          "misconception_id": "multiplication_instead_of_division",
+          "description": "The learner may be multiplying by the coefficient rather than dividing to isolate the variable.",
+          "confidence": 0.9
+        }
+      ],
+      "tags": ["linear_equations", "inverse_operations", "multiplication"]
+    },
+    {
+      "question_id": "eq_003",
+      "concept_id": "equations",
+      "difficulty": "medium",
+      "type": "multiple_choice",
+      "prompt": "Solve: 2x - 5 = 9.",
+      "options": [
+        {"option_id": "a", "text": "2"},
+        {"option_id": "b", "text": "7"},
+        {"option_id": "c", "text": "14"},
+        {"option_id": "d", "text": "4"}
+      ],
+      "correct_option_id": "b",
+      "explanation": "Add 5 to both sides: 2x = 14. Divide both sides by 2: x = 7.",
+      "misconception_rules": [
+        {
+          "option_id": "a",
+          "misconception_id": "sign_error",
+          "description": "The learner may have subtracted 5 from 9 instead of adding 5 when isolating the variable term.",
+          "confidence": 0.9
+        },
+        {
+          "option_id": "c",
+          "misconception_id": "coefficient_not_removed",
+          "description": "The learner may have correctly obtained 2x = 14 but failed to divide by the coefficient.",
+          "confidence": 0.95
+        }
+      ],
+      "tags": ["linear_equations", "multi_step_equations", "inverse_operations"]
+    }
+  ]
+}

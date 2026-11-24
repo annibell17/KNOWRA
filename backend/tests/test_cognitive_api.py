@@ -3,10 +3,8 @@ import asyncio
 import tempfile
 import unittest
 
-from unittest.mock import AsyncMock, patch
-
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -40,7 +38,6 @@ class TestCognitiveAPI(unittest.TestCase):
         async def initialise_test_database():
             await initialize_database(self.database_path)
 
-        import asyncio
         asyncio.run(initialise_test_database())
 
         app.state.learner_repository = self.repository
@@ -51,6 +48,159 @@ class TestCognitiveAPI(unittest.TestCase):
         self.client.close()
         self.pipeline_patcher.stop()
         self.temp_directory.cleanup()
+
+    # --------------------------------------------------
+    # LEARNER PROGRESS TESTS
+    # --------------------------------------------------
+
+    def test_learner_progress_returns_saved_concept_state(self):
+        learner_id = "progress_learner"
+
+        state = self.pipeline.learner_manager.get_or_create_state(
+            learner_id,
+            "arithmetic",
+        )
+
+        state.knowledge_probability = 0.65
+        state.attempts = 3
+        state.correct_attempts = 2
+
+        response = self.client.get(
+            f"/cognitive/learners/{learner_id}/progress"
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["learner_id"], learner_id)
+        self.assertEqual(data["total_concepts_attempted"], 1)
+
+        concept = data["concepts"][0]
+
+        self.assertEqual(concept["concept_id"], "arithmetic")
+        self.assertEqual(
+            concept["concept_name"],
+            "Arithmetic Foundations",
+        )
+        self.assertEqual(concept["knowledge_probability"], 0.65)
+        self.assertEqual(concept["attempts"], 3)
+        self.assertEqual(concept["correct_attempts"], 2)
+
+    def test_unknown_learner_progress_returns_404(self):
+        response = self.client.get(
+            "/cognitive/learners/unknown_learner/progress"
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json()["detail"],
+            "Learner progress not found.",
+        )
+
+    def test_learner_progress_returns_multiple_concepts(self):
+        learner_id = "multi_concept_learner"
+
+        arithmetic_state = (
+            self.pipeline.learner_manager.get_or_create_state(
+                learner_id,
+                "arithmetic",
+            )
+        )
+
+        equations_state = (
+            self.pipeline.learner_manager.get_or_create_state(
+                learner_id,
+                "equations",
+            )
+        )
+
+        arithmetic_state.attempts = 2
+        equations_state.attempts = 4
+
+        response = self.client.get(
+            f"/cognitive/learners/{learner_id}/progress"
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["total_concepts_attempted"], 2)
+
+        concept_ids = {
+            concept["concept_id"]
+            for concept in data["concepts"]
+        }
+
+        self.assertEqual(
+            concept_ids,
+            {"arithmetic", "equations"},
+        )
+
+    # --------------------------------------------------
+    # CONTENT API TESTS
+    # --------------------------------------------------
+
+    def test_module_endpoint_returns_module_information(self):
+        response = self.client.get("/cognitive/modules")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(
+            data["module_id"],
+            "algebra_linear_equations",
+        )
+        self.assertEqual(len(data["concepts"]), 3)
+
+    def test_questions_endpoint_returns_all_questions(self):
+        response = self.client.get("/cognitive/questions")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["total_questions"], 9)
+        self.assertEqual(len(data["questions"]), 9)
+
+    def test_question_endpoint_does_not_expose_answer_keys(self):
+        response = self.client.get("/cognitive/questions")
+
+        self.assertEqual(response.status_code, 200)
+
+        for question in response.json()["questions"]:
+            self.assertNotIn("correct_option_id", question)
+            self.assertNotIn("explanation", question)
+            self.assertNotIn("misconception_rules", question)
+
+    def test_questions_can_be_filtered_by_concept(self):
+        response = self.client.get(
+            "/cognitive/questions",
+            params={"concept_id": "equations"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["total_questions"], 3)
+
+        for question in data["questions"]:
+            self.assertEqual(question["concept_id"], "equations")
+
+    def test_unknown_concept_returns_404(self):
+        response = self.client.get(
+            "/cognitive/questions",
+            params={"concept_id": "unknown_concept"},
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    # --------------------------------------------------
+    # ANSWER SUBMISSION TESTS
+    # --------------------------------------------------
 
     def test_correct_answer_returns_success(self):
         response = self.client.post(
@@ -142,6 +292,10 @@ class TestCognitiveAPI(unittest.TestCase):
 
         self.assertEqual(response.status_code, 422)
 
+    # --------------------------------------------------
+    # DATABASE PERSISTENCE TESTS
+    # --------------------------------------------------
+
     def test_answer_submission_is_persisted(self):
         response = self.client.post(
             "/cognitive/answer/submit",
@@ -153,8 +307,6 @@ class TestCognitiveAPI(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-
-        import asyncio
 
         async def inspect_database():
             states = await self.repository.load_all_states()
@@ -200,14 +352,11 @@ class TestCognitiveAPI(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        import asyncio
-
         async def load_saved_states():
             return await self.repository.load_all_states()
 
         saved_states = asyncio.run(load_saved_states())
 
-        # Simulate a fresh cognitive engine after a restart.
         restored_pipeline = create_demo_pipeline()
 
         for state in saved_states:
@@ -226,7 +375,6 @@ class TestCognitiveAPI(unittest.TestCase):
         self.assertEqual(restored_state.correct_attempts, 1)
 
     def test_startup_restores_saved_learner_states(self):
-        # Create a separate pipeline containing previously saved progress.
         previous_pipeline = create_demo_pipeline()
 
         previous_pipeline.process_answer(
@@ -240,7 +388,6 @@ class TestCognitiveAPI(unittest.TestCase):
             "equations",
         )
 
-        # Simulate a fresh application with an empty learner manager.
         fresh_pipeline = create_demo_pipeline()
 
         repository = type(
@@ -299,6 +446,7 @@ class TestCognitiveAPI(unittest.TestCase):
                 app.state.learner_repository = previous_repository
             elif hasattr(app.state, "learner_repository"):
                 del app.state.learner_repository
+
 
 if __name__ == "__main__":
     unittest.main()

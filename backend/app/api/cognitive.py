@@ -2,6 +2,7 @@
 import logging
 
 from datetime import datetime
+from ..content_loader import load_learning_content
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
@@ -90,7 +91,147 @@ def create_demo_pipeline():
     )
 
 
-cognitive_pipeline = create_demo_pipeline()
+# Load the production learning module once.
+learning_content = load_learning_content()
+
+
+def create_content_pipeline(content=None):
+    """
+    Build the production cognitive pipeline from loaded learning content.
+    """
+
+    content = content or learning_content
+
+    learner_manager = LearnerStateManager()
+
+    recommendation_engine = AdaptiveRecommendationEngine(
+        concept_graph=content.concept_graph,
+        learner_manager=learner_manager,
+    )
+
+    return CognitiveLearningPipeline(
+        misconception_detector=content.misconception_detector,
+        learner_manager=learner_manager,
+        recommendation_engine=recommendation_engine,
+    )
+
+
+# The application uses the real JSON-backed learning module.
+cognitive_pipeline = create_content_pipeline()
+@router.get("/learners/{learner_id}/progress")
+async def get_learner_progress(learner_id: str):
+    """
+    Return the current progress of a learner across concepts.
+    """
+
+    learner_concepts = (
+        cognitive_pipeline.learner_manager.learners.get(learner_id)
+    )
+
+    if not learner_concepts:
+        raise HTTPException(
+            status_code=404,
+            detail="Learner progress not found.",
+        )
+
+    concepts = []
+
+    for concept_id, state in learner_concepts.items():
+        concepts.append(
+            {
+                "concept_id": concept_id,
+                "concept_name": (
+                    learning_content.concept_graph
+                    .concepts[concept_id].name
+                ),
+                "knowledge_probability": (
+                    state.knowledge_probability
+                ),
+                "attempts": state.attempts,
+                "correct_attempts": state.correct_attempts,
+                "misconception_history": (
+                    state.misconception_history
+                ),
+                "last_attempt_at": (
+                    state.last_attempt_at.isoformat()
+                    if state.last_attempt_at
+                    else None
+                ),
+                "retention": (
+                    cognitive_pipeline.learner_manager
+                    .estimate_retention(learner_id, concept_id)
+                ),
+                "retention_anchor_at": (
+                    state.retention_anchor_at.isoformat()
+                    if state.retention_anchor_at
+                    else None
+                ),
+            }
+        )
+
+    return {
+        "learner_id": learner_id,
+        "total_concepts_attempted": len(concepts),
+        "concepts": concepts,
+    }
+@router.get("/modules")
+async def get_modules():
+    """
+    Return available learning module information.
+    """
+
+    concepts = [
+        {
+            "concept_id": concept.concept_id,
+            "name": concept.name,
+            "description": concept.description,
+            "prerequisites": concept.prerequisites,
+        }
+        for concept in learning_content.concept_graph.concepts.values()
+    ]
+
+    return {
+        "module_id": learning_content.module_id,
+        "title": learning_content.title,
+        "description": learning_content.description,
+        "concepts": concepts,
+    }
+@router.get("/questions")
+async def get_questions(concept_id: str | None = None):
+    """
+    Return learner-facing questions without exposing answer keys.
+    """
+
+    questions = []
+
+    for question in learning_content.questions.values():
+
+        if concept_id and question["concept_id"] != concept_id:
+            continue
+
+        questions.append(
+            {
+                "question_id": question["question_id"],
+                "concept_id": question["concept_id"],
+                "difficulty": question["difficulty"],
+                "type": question["type"],
+                "prompt": question["prompt"],
+                "options": question["options"],
+                "tags": question["tags"],
+            }
+        )
+
+    if concept_id and concept_id not in learning_content.concept_graph.concepts:
+        raise HTTPException(
+            status_code=404,
+            detail="Unknown concept ID.",
+        )
+
+    return {
+        "module_id": learning_content.module_id,
+        "total_questions": len(questions),
+        "questions": questions,
+    }
 
 
 class BKTUpdateRequest(BaseModel):

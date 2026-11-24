@@ -1,0 +1,68 @@
+/* Theme definitions with semantic CSS variables */
+
+/* Autumn – default theme */
+:root[data-theme='autumn'] {
+  /* Primary palette */
+  --color-space-cadet: #24334F;
+  --color-slate-gray: #61758A;
+  --color-tan: #D7B99A;
+  --color-coffee: #6B4938;
+  --color-caput-mortuum: #632A2E;
+
+  /* Semantic tokens */
+  --color-primary-text: var(--color-space-cadet);
+  --color-secondary-text: var(--color-slate-gray);
+  --color-page-bg: var(--color-tan);
+  --color-card-bg: #ffffff; /* keep cards white for readability */
+  --color-primary-action: var(--color-caput-mortuum);
+  --color-secondary-action: var(--color-coffee);
+  --color-border: var(--color-slate-gray);
+  --color-accent: var(--color-caput-mortuum);
+  --color-success: #2E7D32; /* green */
+  --color-error: #C62828;   /* red */
+  --color-warning: #ED6C02; /* orange */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+}
+
+/* Spring – alternative theme */
+:root[data-theme='spring'] {
+  /* Primary palette */
+  --color-sage: #C3C895;
+  --color-dark-purple: #30253E;
+  --color-russian-green: #638B72;
+  --color-pewter-blue: #83B8B2;
+  --color-cambridge-blue: #A6D5C7;
+
+  /* Semantic tokens */
+  --color-primary-text: var(--color-dark-purple);
+  --color-secondary-text: var(--color-pewter-blue);
+  --color-page-bg: var(--color-cambridge-blue);
+  --color-card-bg: #ffffff;
+  --color-primary-action: var(--color-russian-green);
+  --color-secondary-action: var(--color-sage);
+  --color-border: var(--color-pewter-blue);
+  --color-accent: var(--color-russian-green);
+  --color-success: #2E7D32;
+  --color-error: #C62828;
+  --color-warning: #ED6C02;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+}
+
+/* Apply defaults */
+html {
+  color: var(--color-primary-text);
+  background-color: var(--color-page-bg);
+}
+
+/* Utility classes using semantic vars (Tailwind can still be used for layout) */
+.bg-page { background-color: var(--color-page-bg); }
+.text-primary { color: var(--color-primary-text); }
+.text-secondary { color: var(--color-secondary-text); }
+.border-semantic { border-color: var(--color-border); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }

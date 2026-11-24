@@ -1,0 +1,25 @@
+{
+  "module_id": "algebra_linear_equations",
+  "title": "Algebra: Linear Equations",
+  "description": "A foundational learning module covering arithmetic, variables, and one-variable linear equations.",
+  "concepts": [
+    {
+      "concept_id": "arithmetic",
+      "name": "Arithmetic Foundations",
+      "description": "Understand basic arithmetic operations, integers, signs, and order of operations.",
+      "prerequisites": []
+    },
+    {
+      "concept_id": "variables",
+      "name": "Understanding Variables",
+      "description": "Understand variables as unknown or changing quantities, and evaluate simple algebraic expressions.",
+      "prerequisites": ["arithmetic"]
+    },
+    {
+      "concept_id": "equations",
+      "name": "One-Variable Linear Equations",
+      "description": "Understand equality, inverse operations, and solving linear equations with one variable.",
+      "prerequisites": ["variables"]
+    }
+  ]
+}
